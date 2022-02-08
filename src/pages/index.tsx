@@ -6,11 +6,11 @@ import Client from '../core/Client'
 
 export default function Home() {
   
-  const clients = [
+  const listClients = [
     new Client('Vitor', 22, '1'),
     new Client('Vitoria', 25, '2'),
     new Client('Vitoriano', 23, '3'),
-    new Client('Vitoriana', 24, '4')
+    new Client('Vitoriana', 24, '4'),
   ]
   
   
@@ -19,7 +19,7 @@ export default function Home() {
     flex justify-center items-center h-screen bg-gradient-to-r 
     from-blue-500   to-purple-500 text-white`}>
 
-    <Layout title='Cadastro Simples'><Table clients={clients}></Table></Layout>
+    <Layout title='Cadastro Simples'><Table listClients={listClients}></Table></Layout>
       
     </div>
   )
