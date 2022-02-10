@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Button from '../components/Button'
 import Layout from '../components/Layout'
 import Table from '../components/Table'
 import Client from '../core/Client'
@@ -25,8 +26,12 @@ export default function Home() {
     flex justify-center items-center h-screen bg-gradient-to-r 
     from-blue-500   to-purple-500 text-white`}>
 
-      <Layout title='Cadastro Simples'><Table listClients={listClients}
-      selectedClient={selectedClient} excludedClient={excludedClient}></Table></Layout>
+      <Layout title='Cadastro Simples'>
+        <div className="flex justify-end">   
+          <Button color="green" className='mb-4'>Novo Cliente</Button>
+        </div>
+        <Table listClients={listClients} selectedClient={selectedClient} excludedClient={excludedClient}></Table>
+      </Layout>
 
     </div>
   )
