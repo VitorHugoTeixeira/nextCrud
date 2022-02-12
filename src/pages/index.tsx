@@ -1,23 +1,29 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import ClientCollection from '../backend/db/ClientCollection'
 import Button from '../components/Button'
 import Form from '../components/Form'
 import Layout from '../components/Layout'
 import Table from '../components/Table'
 import Client from '../core/Client'
+import ClientRepository from '../core/ClientRepository'
 
 export default function Home() {
+  const repo: ClientRepository = new ClientCollection()
 
   const [client, setClient] = useState<Client>(Client.void())
+  const [clients, setClients] = useState<Client[]>([])
   const [visible, setVisible] = useState<'table' | 'form'>('table')
 
-  const listClients = [
-    new Client('Vitor', 22, '1'),
-    new Client('Vitoria', 25, '2'),
-    new Client('Vitoriano', 23, '3'),
-    new Client('Vitoriana', 24, '4')
-  ]
+  useEffect(selectAll, [])
+  
+  function selectAll(){
+    repo.selectAll().then(clients => {
+      setClients(clients)
+      setVisible('table')
+    })
+  }
 
   function selectedClient(client: Client) {
     setClient(client)
@@ -33,9 +39,8 @@ export default function Home() {
     setVisible('form')
   }
 
-  function saveClient(client: Client) {
-    console.log(client)
-    setVisible('table')
+  async function saveClient(client: Client) {
+    
   }
 
 
@@ -52,7 +57,7 @@ export default function Home() {
                 Novo Cliente
               </Button>
             </div>
-            <Table listClients={listClients} selectedClient={selectedClient} excludedClient={excludedClient}></Table>
+            <Table listClients={clients} selectedClient={selectedClient} excludedClient={excludedClient}></Table>
           </>
         ) : (
           <Form didClientChange={saveClient} client={client} canceled={() => setVisible('table')} />

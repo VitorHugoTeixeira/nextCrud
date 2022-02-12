@@ -1,6 +1,3 @@
-// import { colorsGroup } from "../dynamicCSS/ButtonCSSDynamic"
-
-
 const colorsGroup = {
     green: ['from-green-400', 'to-green-700'],
     blue: ['from-blue-400', 'to-blue-700'],
