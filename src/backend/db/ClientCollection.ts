@@ -1,32 +1,30 @@
-import firebase from "../config";
 import Client from "../../core/Client";
+import firebase from "../config";
 import ClientRepository from "../../core/ClientRepository";
 
-export default class ClientCollection implements ClientRepository {
-
+export default class ClientCollection implements ClientRepository{
+    
     #converter = {
         toFirestore(client: Client){
-            return{
+            return {
                 name: client.name,
                 age: client.age,
             }
-        },
-        fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions): Client{
+        }, 
+        fromFirestore(snapshot: firebase.firestore.QueryDocumentSnapshot, options: firebase.firestore.SnapshotOptions){
             const data = snapshot.data(options)
             return new Client(data.name, data.age, snapshot.id)
         }
     }
-
+    
+    
     async save(client: Client): Promise<Client> {
-        
         if(client?.id){
             await this.collection().doc(client.id).set(client)
             return client
-        }
-        else{
+        }else{
             const docRef = await this.collection().add(client)
             const doc = await docRef.get()
-
             return doc.data()
         }
     }
@@ -41,6 +39,8 @@ export default class ClientCollection implements ClientRepository {
     }
 
     private collection(){
-        return firebase.firestore().collection('clients').withConverter(this.#converter)
+        return firebase.firestore()
+        .collection('clients')
+        .withConverter(this.#converter)
     }
 }

@@ -10,11 +10,13 @@ import Client from '../core/Client'
 import ClientRepository from '../core/ClientRepository'
 
 export default function Home() {
-  const repo: ClientRepository = new ClientCollection()
 
   const [client, setClient] = useState<Client>(Client.void())
   const [clients, setClients] = useState<Client[]>([])
   const [visible, setVisible] = useState<'table' | 'form'>('table')
+
+
+  const repo: ClientRepository = new ClientCollection()
 
   useEffect(selectAll, [])
   
@@ -23,6 +25,7 @@ export default function Home() {
       setClients(clients)
       setVisible('table')
     })
+    
   }
 
   function selectedClient(client: Client) {
@@ -30,8 +33,9 @@ export default function Home() {
     setVisible('form')
   }
 
-  function excludedClient(client: Client) {
-    console.log(client.name)
+  async function excludedClient(client: Client) {
+    await repo.delete(client)
+    selectAll()
   }
 
   function newClient() {
@@ -40,7 +44,8 @@ export default function Home() {
   }
 
   async function saveClient(client: Client) {
-    
+     repo.save(client)
+     selectAll()
   }
 
 
