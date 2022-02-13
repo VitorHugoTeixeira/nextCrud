@@ -1,53 +1,12 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
-import ClientCollection from '../backend/db/ClientCollection'
 import Button from '../components/Button'
 import Form from '../components/Form'
 import Layout from '../components/Layout'
 import Table from '../components/Table'
-import Client from '../core/Client'
-import ClientRepository from '../core/ClientRepository'
+import useClients from '../hooks/useClient'
 
 export default function Home() {
 
-  const [client, setClient] = useState<Client>(Client.void())
-  const [clients, setClients] = useState<Client[]>([])
-  const [visible, setVisible] = useState<'table' | 'form'>('table')
-
-
-  const repo: ClientRepository = new ClientCollection()
-
-  useEffect(selectAll, [])
-  
-  function selectAll(){
-    repo.selectAll().then(clients => {
-      setClients(clients)
-      setVisible('table')
-    })
-    
-  }
-
-  function selectedClient(client: Client) {
-    setClient(client)
-    setVisible('form')
-  }
-
-  async function excludedClient(client: Client) {
-    await repo.delete(client)
-    selectAll()
-  }
-
-  function newClient() {
-    setClient(Client.void())
-    setVisible('form')
-  }
-
-  async function saveClient(client: Client) {
-     repo.save(client)
-     selectAll()
-  }
-
+  const {tableVisible, displayTable, client, clients, newClient, saveClient, excludedClient, selectedClient} = useClients()
 
   return (
     <div className={`
@@ -55,7 +14,7 @@ export default function Home() {
     from-blue-500   to-purple-500 text-white`}>
 
       <Layout title='Cadastro Simples'>
-        {visible === 'table' ? (
+        {tableVisible ? (
           <>
             <div className="flex justify-end">
               <Button color="green" className='mb-4' onClick={newClient}>
@@ -65,7 +24,7 @@ export default function Home() {
             <Table listClients={clients} selectedClient={selectedClient} excludedClient={excludedClient}></Table>
           </>
         ) : (
-          <Form didClientChange={saveClient} client={client} canceled={() => setVisible('table')} />
+          <Form didClientChange={saveClient} client={client} canceled={displayTable} />
         )}
       </Layout>
     </div>
